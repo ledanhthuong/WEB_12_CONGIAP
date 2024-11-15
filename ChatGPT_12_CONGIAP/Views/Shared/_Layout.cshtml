@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - HIU</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/Home.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ChatGPT_12_CONGIAP.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+            <div class="container">
+                <div class="logo">
+                    <img src="/img/logo.png" alt="logo">
+                    <h4>HIU_DRAWING CONTEST</h4>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="/home">Trang Chủ</a></li>
+                        <li><a href="/news">Tin Tức</a></li>
+                        <li><a href="/contact">Liên Hệ</a></li>
+                    </ul>
+                </nav>
+                <div class="search-container">
+                    <div class="avatar-button">
+                        <img src="/img/user-avatar.jpg" alt="User Avatar">
+                    </div>
+                </div>
+                <button class="menu-button" onclick="toggleMenu()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - ChatGPT_12_CONGIAP - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
