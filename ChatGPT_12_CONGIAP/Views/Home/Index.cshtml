@@ -1,73 +1,89 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User List</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+﻿@{
+    ViewData["Title"] = "Home";
+}
+<link rel="stylesheet" href="~/css/Home.css" asp-append-version="true" />
+<div class="banner-slider">
+    <div class="slides">
+        <img src="./image/banner.jpg" alt="Banner 1">
+        <img src="./image/banner.jpg" alt="Banner 2">
+        <img src="./image/banner.jpg" alt="Banner 3">
+    </div>
+    <button class="prev" onclick="prevSlide()">&#10094;</button>
+    <button class="next" onclick="nextSlide()">&#10095;</button>
 
-        table, th, td {
-            border: 1px solid black;
-        }
+    <div class="container">
+        <main class="content">
+            <h1 id="banner-title">Cuộc thi Vẽ tranh cùng AI 2024</h1>
+            <div class="announcement" id="banner-announcement">
+                🌟 Hãy nhanh tay tham gia cuộc thi để nhận nhiều phần quà hấp dẫn và cơ hội trình diễn tài năng của
+                bạn! 🌟
+            </div>
+            <div class="zodiac-icon">
+                <button id="joinContestButton" onclick="goToDrawingContest()">Tham Gia Ngay</button>
 
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
+            </div>
+        </main>
+    </div>
+</div>
+<div class="contest-rules" id="contest-rules">
+        <h2>Thể Lệ Cuộc Thi</h2>
 
-        button {
-            padding: 10px;
-            margin: 10px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <h1>User List</h1>
-    <button id="loadUsers">Load Users</button>
-    <table id="userTable">
-        <thead>
-            <tr>
-                <th>User ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Group ID</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- User data will be populated here -->
-        </tbody>
-    </table>
+        <h3>1. Thông tin cuộc thi</h3>
+        <p class="highlight">Đối tượng dự thi:</p>
+        <ul>
+            <li><span class="highlight">Bảng A:</span> Học sinh Trung học phổ thông trên cả nước.</li>
+            <li><span class="highlight">Bảng B:</span> Học sinh Trung học cơ sở trên cả nước.</li>
+        </ul>
 
-    <script>
-        // Function to fetch users from Flask API using Fetch
-        document.getElementById('loadUsers').addEventListener('click', function () {
-            fetch('http://127.0.0.1:5000/user') // Your Flask API URL
-                .then(response => response.json()) // Parse JSON data
-                .then(data => {
-                    const users = data; // Your fetched data
-                    const tableBody = document.querySelector('#userTable tbody');
-                    tableBody.innerHTML = ''; // Clear existing table data
+        <p class="highlight">Thể lệ đăng ký:</p>
+        <p>Để tham gia cuộc thi, thí sinh đăng ký tài khoản tại đây. Mọi thắc mắc vui lòng gửi email về địa chỉ
+            <a href="">hiu@siu.edu.vn</a>.
+        </p>
 
-                    users.forEach(user => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                                    <td>${user.user_id}</td>
-                                    <td>${user.name}</td>
-                                    <td>${user.email}</td>
-                                    <td>${user.group_id}</td>
-                                `;
-                        tableBody.appendChild(row);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching user data:', error);
-                });
-        });
-    </script>
-</body>
-</html>
+        <h3>2. Cuộc thi gồm hai vòng thi</h3>
+        <p>Trong vòng sơ loại, các thí sinh sẽ sử dụng phần mềm AI để hiện thực hóa ý tưởng thành các bức tranh kỹ
+            thuật số dựa trên chủ đề được nhận từ ban tổ chức.</p>
+
+        <h3>3. Về vấn đề sở hữu trí tuệ</h3>
+        <p>Tác phẩm dự thi do thí sinh sáng tạo bởi phần mềm AI tạo sinh theo quy định của Ban Tổ chức. Tác phẩm dự thi
+            không được mô phỏng hoặc vẽ lại dựa trên tranh có sẵn hay tác phẩm của tác giả khác.</p>
+
+        <h3>4. Cơ cấu giải thưởng</h3>
+        <h3>Đối với học sinh THPT</h3>
+        <ul>
+            <li><strong>Giải Nhất (1 giải):</strong> 30.000.000 đồng và học bổng 70% học phí 4 năm đại học.</li>
+            <li><strong>Giải Nhì (1 giải):</strong> 20.000.000 đồng và học bổng 100% học phí năm 1.</li>
+            <li><strong>Giải Ba (1 giải):</strong> 10.000.000 đồng và học bổng 50% học phí năm 1.</li>
+            <li><strong>Giải Khuyến Khích (3 giải):</strong> 5.000.000 đồng/giải và học bổng 30% học phí năm 1.</li>
+            <li><strong>Giải do khán giả bình chọn qua mạng xã hội (1 giải):</strong> 3.000.000 đồng và giấy khen.</li>
+        </ul>
+    </div>
+
+    <!-- Guide Section -->
+<div class="guide-section" id="guide-section">
+        <h1>Hướng Dẫn</h1>
+        <h2>1. Đăng Ký Tài Khoản</h2>
+        <p>Để tham gia cuộc thi, thí sinh cần đăng ký tài khoản trên trang web của cuộc thi. Vui lòng truy cập vào
+            <a href="https://example.com">đường dẫn này</a> và điền đầy đủ thông tin cá nhân.
+        </p>
+        <h2>2. Cách Thức Tham Gia</h2>
+        <p>Sau khi đăng ký, thí sinh sẽ nhận được hướng dẫn chi tiết về cách thức tham gia. Các bước bao gồm:</p>
+        <ul>
+            <li><span class="highlight">Bước 1:</span> Đăng nhập vào hệ thống bằng tài khoản đã đăng ký.</li>
+            <li><span class="highlight">Bước 2:</span> Chọn chủ đề và gửi tác phẩm dự thi.</li>
+            <li><span class="highlight">Bước 3:</span> Theo dõi trạng thái và kết quả trên trang cá nhân.</li>
+        </ul>
+        <h2>3. Quy Định Về Tác Phẩm</h2>
+        <p>Thí sinh cần đảm bảo rằng tác phẩm của mình đáp ứng các yêu cầu sau:</p>
+        <ul>
+            <li>Không vi phạm bản quyền hoặc quyền sở hữu trí tuệ của người khác.</li>
+            <li>Phù hợp với chủ đề được ban tổ chức cung cấp.</li>
+            <li>Được tạo bằng phần mềm AI theo yêu cầu của cuộc thi.</li>
+        </ul>
+        <h2>4. Liên Hệ Hỗ Trợ</h2>
+        <p>Nếu thí sinh có bất kỳ câu hỏi hoặc cần hỗ trợ, vui lòng liên hệ với chúng tôi qua email:
+            <a href="mailto:aiart@siu.edu.vn">aiart@siu.edu.vn</a>.
+        </p>
+    </div>
+<script src="~/js/home.js" asp-append-version="true"></script>
+

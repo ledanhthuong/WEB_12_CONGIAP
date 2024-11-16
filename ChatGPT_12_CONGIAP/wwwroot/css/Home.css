@@ -1,155 +1,305 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-  margin-bottom: 60px;
-}
-
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-}
-
-header {
-    background-color: rgba(31, 41, 55, 0.9);
-    color: #f3f4f6;
-    position: fixed;
+﻿/* Banner Slider Styles */
+.banner-slider {
+    position: relative;
     width: 100%;
-    top: 0;
-    z-index: 1000;
-    padding: 1rem 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-}
-
-    .logo img {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-    }
-
-    .logo h4 {
-        font-size: 24px;
-        font-weight: bold;
-        margin-left: 10px;
-        text-transform: uppercase;
-        font-family: 'Bebas Neue', sans-serif;
-        color: #9f7aea;
-    }
-
-nav ul {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-    nav ul li {
-        margin: 0 1rem;
-    }
-
-        nav ul li a {
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            color: #f3f4f6;
-            transition: color 0.3s ease, border-color 0.3s ease;
-        }
-
-            nav ul li a:hover {
-                color: #9f7aea;
-                border-bottom: 2px solid #9f7aea;
-            }
-
-.search-container {
-    display: flex;
-    align-items: center;
-}
-
-.avatar-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #d1d5db;
-    cursor: pointer;
+    margin: 100px auto;
     overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-    .avatar-button img {
+.slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+    .slides img {
         width: 100%;
-        height: 100%;
-        object-fit: cover;
+        height: auto;
+        flex: 0 0 100%;
     }
 
-.menu-button {
-    display: none;
-    background: none;
+.prev,
+.next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
     border: none;
+    font-size: 24px;
+    padding: 10px;
     cursor: pointer;
+    border-radius: 50%;
+    z-index: 10;
 }
 
-    .menu-button svg {
-        width: 30px;
-        height: 30px;
-        color: #f3f4f6;
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}
+
+    .prev:hover,
+    .next:hover {
+        background-color: rgba(0, 0, 0, 0.8);
     }
 
-@media screen and (max-width: 1024px) {
-    nav ul {
-        display: none;
-        flex-direction: column;
-        background-color: rgba(31, 41, 55, 0.95);
-        position: absolute;
-        top: 100%;
-        right: 0;
-        width: 100%;
-        padding: 1rem 0;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* Centered Overlay Content */
+.banner-slider .container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    text-align: center;
+    color: white;
+    z-index: 5;
+}
+
+.banner-slider .content h1 {
+    font-size: 48px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: linear-gradient(to right, #155e75, #ef4444);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+}
+
+.announcement {
+    font-size: 20px;
+    margin: 10px 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.team-options button,
+.zodiac-icon button {
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background-color: #b22d00;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 10px;
+    transition: background-color 0.3s;
+}
+
+    .team-options button:hover,
+    .zodiac-icon button:hover {
+        background-color: #3a1f1a;
     }
 
-        nav ul.active {
-            display: flex;
+#joinNowButton {
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background-color: #b22d00;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+    #joinNowButton:hover {
+        background-color: #3a1f1a;
+    }
+
+
+
+/* Responsive Styling */
+@media (max-width: 1024px) {
+    .content h1 {
+        font-size: 36px;
+    }
+
+    .announcement {
+        font-size: 18px;
+    }
+
+    .team-options button,
+    .zodiac-icon button {
+        font-size: 16px;
+    }
+
+    #joinNowButton {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .banner-slider {
+        margin: 80px auto;
+    }
+
+    .content h1 {
+        font-size: 28px;
+    }
+
+
+
+    .announcement {
+        font-size: 16px;
+    }
+
+    .team-options button,
+    .zodiac-icon button {
+        font-size: 14px;
+    }
+
+    #joinNowButton {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content h1 {
+        font-size: 22px;
+    }
+
+    .announcement {
+        font-size: 14px;
+    }
+
+    .team-options button,
+    .zodiac-icon button {
+        font-size: 12px;
+        padding: 8px 14px;
+    }
+
+    #joinNowButton {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}
+
+/* Additional styling for Contest Rules Section */
+        .contest-rules {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #e9f5ff;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        nav ul li {
+        .contest-rules h2 {
+            font-size: 32px;
             text-align: center;
-            margin: 0.5rem 0;
+            color: #ef4444;
+            font-weight: bold;
+            margin-bottom: 20px;
         }
 
-    .menu-button {
-        display: block;
-    }
-}
+        .contest-rules h3 {
+            font-size: 24px;
+            color: #333;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .contest-rules p,
+        .contest-rules ul {
+            font-size: 18px;
+            color: #555;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        .contest-rules ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .contest-rules ul li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+
+        .contest-rules ul li:before {
+            content: "•";
+            position: absolute;
+            left: 10px;
+            color: #ef4444;
+            font-size: 22px;
+        }
+
+        .highlight {
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        /* Additional Styling for Guide Section */
+        .guide-section {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #e9f5ff;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .guide-section h1 {
+            font-size: 32px;
+            color: #ef4444;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .guide-section h2 {
+            font-size: 24px;
+            color: #333;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .guide-section p,
+        .guide-section ul {
+            font-size: 18px;
+            color: #555;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        .guide-section ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .guide-section ul li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 10px;
+        }
+
+        .guide-section ul li:before {
+            content: "•";
+            position: absolute;
+            left: 10px;
+            color: #ef4444;
+            font-size: 22px;
+        }
+
+        .guide-section a {
+            color: #ef4444;
+            text-decoration: none;
+        }
+
+        .guide-section a:hover {
+            text-decoration: underline;
+        }
+
+

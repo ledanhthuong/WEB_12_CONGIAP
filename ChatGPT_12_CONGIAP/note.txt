@@ -1,0 +1,9 @@
+﻿Khi người dùng đăng nhập thành công:
+HttpContext.Session.SetString("UserId", user.Id.ToString());
+HttpContext.Session.SetString("UserName", user.UserName);
+
+Đọc Session:
+var userId = HttpContext.Session.GetString("UserId");
+var userName = HttpContext.Session.GetString("UserName");
+--Convert base64 to image
+https://stackoverflow.com/questions/21227078/convert-base64-to-image-in-javascript-jquery
