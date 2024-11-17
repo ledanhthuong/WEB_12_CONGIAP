@@ -273,6 +273,22 @@ function addTableRow(stt, topic) {
     `;
     tableBody.appendChild(row);
 }
+function downloadImage(stt) {
+    // Tìm ảnh tương ứng trong slot
+    const slot = document.querySelector(`.image-slot[data-slot="${stt}"] img`);
+
+    if (!slot || !slot.src) {
+        showNotification("Không tìm thấy ảnh để tải về!");
+        return;
+    }
+
+    // Tạo một thẻ <a> để tải ảnh
+    const link = document.createElement("a");
+    link.href = slot.src; // Đường dẫn ảnh (base64)
+    link.download = `image_slot_${stt}.png`; // Tên file khi tải
+    link.click(); // Tự động kích hoạt tải ảnh
+}
+
 
 /**
  * Update the save button text based on remaining slots.
