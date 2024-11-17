@@ -76,73 +76,20 @@ function saveTopic() {
     const topic = document.getElementById("imageTopic").value.trim();
     const teamId = localStorage.getItem("team_id");
 
-    // Kiểm tra nếu email hoặc password trống
+    // Check if topic or teamId is empty
     if (!topic || !teamId) {
-        alert("Câu Truy Vẫn không được để trống!");
+        showNotification("Không được để trống!");
         return;
     }
 
-    // Chuẩn bị payload cho request
+    // Prepare request payload
     const request = {
         team_id: teamId,
         prompt: topic,
     };
-    console.log("Login successful", teamId, topic);
 
-
-    // Gửi yêu cầu AJAX
-    $.ajax({
-        url: "http://127.0.0.1:5000/prompt/create", // URL API
-        method: "POST",
-        data: JSON.stringify(request),
-        contentType: "application/json",
-        success: function (response) {
-            console.log("Login successful", response);
-
-            // Kiểm tra và xử lý 
-            if (response) {
-                const base64String = response;
-                updateSlot(currentSlot, base64String);
-
-                slot++;
-                if (currentSlot > 5) {
-                    //khóa không cho nhập
-                }
-
-            } else {
-                alert("Không thể vẽ hình ảnh. Vui lòng thử lại.");
-            }
-        },
-        error: function (error) {
-            console.error("Vẽ thất bại", error);
-            alert("Vẽ thất bại. Vui lòng kiểm tra lại thông tin!");
-        },
-    });
-
-    function updateSlot(slotNumber, base64String) {
-        // Tìm slot dựa trên data-slot
-        const slot = document.querySelector(`.image-slot[data-slot="${slotNumber}"]`);
-
-        if (slot) {
-            // Nếu là <img>, cập nhật src
-            if (slot.tagName.toLowerCase() === 'img') {
-                slot.src = 'data:image/png;base64,' + base64String;
-            } else {
-                // Nếu là <div>, thay đổi nội dung thành hình ảnh
-                slot.innerHTML = `<img src="data:image/png;base64,${base64String}" alt="Generated Image" />`;
-            }
-        } else {
-            console.error(`Slot with data-slot="${slotNumber}" not found.`);
-        }
-    }
-
-
-    const words = topic.split(/\s+/).filter(word => word !== ""); // Word count
-
-    if (!topic) {
-        showNotification("Vui lòng nhập đề tài trước khi vẽ!");
-        return;
-    }
+    // Check word limit
+    const words = topic.split(/\s+/).filter(word => word !== "");
 
     if (words.length > 1000) {
         showNotification("Đề tài không được vượt quá 1000 từ. Vui lòng chỉnh sửa lại!");
@@ -156,18 +103,90 @@ function saveTopic() {
 
     // Show confirmation before saving
     showConfirmation(`Bạn có chắc muốn vẽ với đề tài "${topic}" không?`, () => {
-        const slot = document.querySelector(`.image-slot[data-slot="${currentSlot + 1}"]`);
-        slot.textContent = `Topic: ${topic}`;
-        slot.classList.add("filled");
+        const slotElement = document.querySelector(`.image-slot[data-slot="${currentSlot + 1}"]`);
 
-        currentSlot++;
-        updateSaveButtonText();
-        addTableRow(currentSlot, topic);
+        if (!slotElement) {
+            showNotification("Không tìm thấy slot hình!");
+            return;
+        }
 
-        showNotification("Đề tài đã được lưu thành công!");
+        // Add loading indicator
+        slotElement.innerHTML = `<div class="loading-indicator">Đang vẽ... <span id="progress-${currentSlot + 1}">0%</span></div>`;
+        slotElement.classList.add("loading");
+
+        // Track loading progress
+        let progress = 0;
+        const interval = setInterval(() => {
+            if (progress < 90) {
+                progress += 10; // Increment progress up to 90%
+                const progressElement = document.getElementById(`progress-${currentSlot + 1}`);
+                if (progressElement) {
+                    progressElement.textContent = `${progress}%`;
+                }
+            }
+        }, 500);
+
+        // Send AJAX request
+        const startTime = Date.now();
+        $.ajax({
+            url: "http://127.0.0.1:5000/prompt/create",
+            method: "POST",
+            data: JSON.stringify(request),
+            contentType: "application/json",
+            success: function (response) {
+                clearInterval(interval); // Clear progress interval
+
+                const elapsedTime = Date.now() - startTime;
+                const remainingTime = Math.max(0, 5000 - elapsedTime); // Ensure a minimum 5-second duration
+
+                setTimeout(() => {
+                    // Complete progress and display image
+                    progress = 100;
+                    const progressElement = document.getElementById(`progress-${currentSlot + 1}`);
+                    if (progressElement) {
+                        progressElement.textContent = `${progress}%`;
+                    }
+
+                    if (response) {
+                        const base64String = response;
+                        updateSlot(currentSlot + 1, base64String);
+
+                        currentSlot++;
+                        updateSaveButtonText();
+                        addTableRow(currentSlot, topic);
+                    } else {
+                        slotElement.innerHTML = "Không thể vẽ hình ảnh. Vui lòng thử lại.";
+                        slotElement.classList.remove("loading");
+                        alert("Không thể vẽ hình ảnh. Vui lòng thử lại.");
+                    }
+                }, remainingTime);
+            },
+            error: function (error) {
+                clearInterval(interval); // Clear progress interval
+                slotElement.innerHTML = "Vẽ thất bại!";
+                slotElement.classList.remove("loading");
+                console.error("Vẽ thất bại", error);
+                alert("Vẽ thất bại. Vui lòng kiểm tra lại thông tin!");
+            },
+        });
     });
 }
 
+/**
+* Update a slot with the generated image.
+* @param {number} slotNumber The slot number.
+* @param {string} base64String The base64 image string.
+*/
+function updateSlot(slotNumber, base64String) {
+    const slot = document.querySelector(`.image-slot[data-slot="${slotNumber}"]`);
+
+    if (slot) {
+        slot.classList.remove("loading");
+        slot.innerHTML = `<img src="data:image/png;base64,${base64String}" alt="Generated Image" />`;
+    } else {
+        console.error(`Slot with data-slot="${slotNumber}" not found.`);
+    }
+}
 /**
  * Add a new row to the table for the saved topic.
  * @param {number} stt The slot number.
@@ -176,14 +195,30 @@ function saveTopic() {
 function addTableRow(stt, topic) {
     const row = document.createElement("tr");
     row.innerHTML = `
-            <td>${stt}</td>
-            <td>${topic}</td>
-            <td>Hình ${stt}</td>
-            <td><button onclick="downloadImage(${stt})">Tải về</button></td>
-            <td><input type="radio" name="submitImage" value="${stt}"></td>
-        `;
+        <td>${stt}</td>
+        <td>${topic}</td>
+        <td>Hình ${stt}</td>
+        <td><button onclick="downloadImage(${stt})">Tải về</button></td>
+        <td><input type="radio" name="submitImage" value="${stt}"></td>
+    `;
     tableBody.appendChild(row);
 }
+function downloadImage(stt) {
+    // Tìm ảnh tương ứng trong slot
+    const slot = document.querySelector(`.image-slot[data-slot="${stt}"] img`);
+
+    if (!slot || !slot.src) {
+        showNotification("Không tìm thấy ảnh để tải về!");
+        return;
+    }
+
+    // Tạo một thẻ <a> để tải ảnh
+    const link = document.createElement("a");
+    link.href = slot.src; // Đường dẫn ảnh (base64)
+    link.download = `image_slot_${stt}.png`; // Tên file khi tải
+    link.click(); // Tự động kích hoạt tải ảnh
+}
+
 
 /**
  * Update the save button text based on remaining slots.
@@ -290,7 +325,6 @@ function checkWordLimit(textarea, maxWords) {
 
     wordCountElement.textContent = `${words.length}/${maxWords} từ`;
 }
-
 
 // Initialize save button text
 updateSaveButtonText();
