@@ -68,10 +68,11 @@ body {
     text-align: center;
     cursor: pointer;
 }
-.image-slot img{
-    width: 150px;
-    height: 150px;
-}
+
+    .image-slot img {
+        width: 150px;
+        height: 150px;
+    }
 
     .image-slot.filled {
         border-color: #333;
@@ -204,7 +205,6 @@ td {
 
 .modal-content {
     margin: 2% auto;
-    padding: 20px;
     background-color: white;
     border-radius: 8px;
     width: 600px;

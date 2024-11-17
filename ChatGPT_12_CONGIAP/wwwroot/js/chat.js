@@ -1,4 +1,5 @@
-﻿let currentSlot = 1;
+﻿let currentSlot = 0;
+let slot = 1;
 const maxSlots = 5;
 const saveButton = document.getElementById("saveButton");
 const tableBody = document.querySelector("#imageTable tbody");
@@ -103,7 +104,7 @@ function saveTopic() {
                 const base64String = response;
                 updateSlot(currentSlot, base64String);
 
-                currentSlot++;
+                slot++;
                 if (currentSlot > 5) {
                     //khóa không cho nhập
                 }
@@ -197,11 +198,14 @@ function updateSaveButtonText() {
  * @param {HTMLElement} slot The clicked slot.
  */
 function handleSlotClick(slot) {
-    if (slot.classList.contains("filled")) {
+    const imgElement = slot.querySelector("img");
+    if (imgElement) {
         const modal = document.getElementById("imageModal");
-        const modalText = document.getElementById("modalText");
-        modalText.textContent = slot.textContent;
+        const modalImage = document.getElementById("modalImage");
+        modalImage.src = imgElement.src;
         modal.style.display = "block";
+    } else {
+        showNotification("Không có hình ảnh để phóng to!");
     }
 }
 /**
