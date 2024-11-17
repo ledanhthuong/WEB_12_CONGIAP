@@ -1,4 +1,5 @@
-﻿let currentSlot = 1;
+﻿let currentSlot = 0;
+let slot = 1;
 const maxSlots = 5;
 const saveButton = document.getElementById("saveButton");
 const tableBody = document.querySelector("#imageTable tbody");
@@ -103,7 +104,7 @@ function saveTopic() {
                 const base64String = response;
                 updateSlot(currentSlot, base64String);
 
-                currentSlot++;
+                slot++;
                 if (currentSlot > 5) {
                     //khóa không cho nhập
                 }
@@ -118,22 +119,22 @@ function saveTopic() {
         },
     });
 
-function updateSlot(slotNumber, base64String) {
-    // Tìm slot dựa trên data-slot
-    const slot = document.querySelector(`.image-slot[data-slot="${slotNumber}"]`);
+    function updateSlot(slotNumber, base64String) {
+        // Tìm slot dựa trên data-slot
+        const slot = document.querySelector(`.image-slot[data-slot="${slotNumber}"]`);
 
-    if (slot) {
-        // Nếu là <img>, cập nhật src
-        if (slot.tagName.toLowerCase() === 'img') {
-            slot.src = 'data:image/png;base64,' + base64String;
+        if (slot) {
+            // Nếu là <img>, cập nhật src
+            if (slot.tagName.toLowerCase() === 'img') {
+                slot.src = 'data:image/png;base64,' + base64String;
+            } else {
+                // Nếu là <div>, thay đổi nội dung thành hình ảnh
+                slot.innerHTML = `<img src="data:image/png;base64,${base64String}" alt="Generated Image" />`;
+            }
         } else {
-            // Nếu là <div>, thay đổi nội dung thành hình ảnh
-            slot.innerHTML = `<img src="data:image/png;base64,${base64String}" alt="Generated Image" />`;
+            console.error(`Slot with data-slot="${slotNumber}" not found.`);
         }
-    } else {
-        console.error(`Slot with data-slot="${slotNumber}" not found.`);
     }
-}
 
 
     const words = topic.split(/\s+/).filter(word => word !== ""); // Word count
@@ -197,11 +198,14 @@ function updateSaveButtonText() {
  * @param {HTMLElement} slot The clicked slot.
  */
 function handleSlotClick(slot) {
-    if (slot.classList.contains("filled")) {
+    const imgElement = slot.querySelector("img");
+    if (imgElement) {
         const modal = document.getElementById("imageModal");
-        const modalText = document.getElementById("modalText");
-        modalText.textContent = slot.textContent;
+        const modalImage = document.getElementById("modalImage");
+        modalImage.src = imgElement.src;
         modal.style.display = "block";
+    } else {
+        showNotification("Không có hình ảnh để phóng to!");
     }
 }
 /**
