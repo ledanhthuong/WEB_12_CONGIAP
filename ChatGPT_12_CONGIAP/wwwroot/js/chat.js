@@ -76,6 +76,12 @@ function saveTopic() {
     const topic = document.getElementById("imageTopic").value.trim();
     const teamId = localStorage.getItem("team_id");
 
+    // Kiểm tra nếu đã vượt giới hạn
+    if (slot > maxSlots) {
+        alert("Bạn đã đạt đến giới hạn vẽ hình ảnh!");
+        return;
+    }
+
     // Kiểm tra nếu email hoặc password trống
     if (!topic || !teamId) {
         alert("Câu Truy Vẫn không được để trống!");
@@ -105,8 +111,9 @@ function saveTopic() {
                 updateSlot(currentSlot, base64String);
 
                 slot++;
-                if (currentSlot > 5) {
-                    //khóa không cho nhập
+                if (slot > maxSlots) {
+                    alert("Bạn đã đạt đến giới hạn vẽ hình ảnh!");
+                    document.getElementById("saveButton").disabled = true; // Vô hiệu hóa nút
                 }
 
             } else {
