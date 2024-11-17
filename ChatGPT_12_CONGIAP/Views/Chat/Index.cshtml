@@ -1,28 +1,58 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
 @{
-
+    Layout = "_Layout";
 }
-<body>
+<link rel="stylesheet" href="~/css/chat.css" asp-append-version="true" />
+<div class="container">
+    <h1 class="exam-title">Cuộc thi Vẽ tranh cùng AI 2024</h1>
+    <div class="chat-box" id="chatBox">
+        <textarea id="imageTopic" placeholder="Type the topic here..." rows="3"></textarea>
+        <button id="saveButton" onclick="saveTopic()">Bạn còn 5 lần vẽ</button>
+    </div>
+    <div id="notification" class="hidden">
+        <p id="notificationMessage">Thông báo</p>
+        <div id="notificationButtons" class="hidden">
+            <button id="confirmButton" onclick="confirmAction()">Xác nhận</button>
+            <button id="cancelButton" onclick="cancelAction()">Hủy</button>
+        </div>
+    </div>
 
-    <h1>User List</h1>
-    <h1>User List</h1>
-    <h1>User List</h1>
-    <h1>User List</h1>
-    <h1>User List</h1>
-    <h1>User List</h1>
-    <button id="loadUsers">Load Users</button>
-    <table border="1" id="userTable">
+    <div class="image-container">
+        <div class="image-slot" data-slot="1" onclick="handleSlotClick(this)">Chưa Được Vẽ</div>
+        <div class="image-slot" data-slot="2" onclick="handleSlotClick(this)">Chưa Được Vẽ</div>
+        <div class="image-slot" data-slot="3" onclick="handleSlotClick(this)">Chưa Được Vẽ</div>
+        <div class="image-slot" data-slot="4" onclick="handleSlotClick(this)">Chưa Được Vẽ</div>
+        <div class="image-slot" data-slot="5" onclick="handleSlotClick(this)">Chưa Được Vẽ</div>
+    </div>
+
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p id="modalText"></p>
+        </div>
+    </div>
+
+    <table id="imageTable">
         <thead>
             <tr>
-                <th>User ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Group ID</th>
+                <th>STT</th>
+                <th>Mô tả</th>
+                <th>Hình</th>
+                <th>Tải Về</th>
+                <th>Chọn Nộp</th>
             </tr>
         </thead>
         <tbody>
+            <!-- Rows will be dynamically added here -->
         </tbody>
     </table>
-</body>
+
+    <div class="submit-container">
+        <span>
+            <b>Link Video : </b>
+        </span>
+        <input type="url" id="videoLink" placeholder="Dán liên kết video của bạn vào đây ..." />
+        <button id="submitBtn" onclick="submitImages()">Nộp Bài</button>
+    </div>
+</div>
+<script src="~/js/chat.js" asp-append-version="true"></script>

@@ -1,0 +1,177 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1e3c72;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        .team-container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .team-card {
+            background: #2b4066;
+            border-radius: 15px;
+            text-align: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .team-card img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid #ef4444;
+            margin-bottom: 10px;
+        }
+
+        .team-card h2 {
+            font-size: 1.8rem;
+            color: #ef4444;
+            margin-bottom: 10px;
+        }
+
+        .team-card p {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .info-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .info-container div {
+            text-align: left;
+        }
+
+        .info-container h4 {
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            color: #ffcccc;
+        }
+
+        .password-section {
+            background: #2b4066;
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .password-section h4 {
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            color: #ffd6d6;
+        }
+
+        .form-control {
+            background-color: #2b4066;
+            color: white;
+            border: 1px solid white;
+        }
+
+        .form-control:focus {
+            background-color: #2b4066;
+            color: white;
+            border-color: white;
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            background-color: #b22d00;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #821a00;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="team-container">
+        <div class="row">
+            <!-- Thông Tin Team -->
+            <div class="col-md-6">
+                <div class="team-card">
+                    <img src="https://via.placeholder.com/150" alt="Team Logo">
+                    <h2>Team Alpha</h2>
+                    <p>
+                        Đây là team xuất sắc nhất đến từ trường A. Với sự sáng tạo, nhiệt huyết và kỹ năng vượt trội,
+                        team tự hào tham gia mọi thử thách!
+                    </p>
+                    <div class="info-container">
+                        <div>
+                            <h4>Công Việc</h4>
+                            <p><strong>Thành viên:</strong> Nguyễn Văn A, Trần Thị B</p>
+                            <p><strong>Lớp:</strong> 10A1</p>
+                            <p><strong>Trường:</strong> Trường A</p>
+                        </div>
+                        <div>
+                            <h4>Thông Tin Liên Lạc</h4>
+                            <p><strong>Email:</strong> alpha@example.com</p>
+                            <p><strong>Điện thoại:</strong> 0123456789</p>
+                            <p><strong>Địa chỉ:</strong> 123 Đường ABC, TP.HCM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Đổi Mật Khẩu -->
+            <div class="col-md-6">
+                <div class="password-section">
+                    <h4>Đổi Mật Khẩu</h4>
+                    <form id="changePasswordForm">
+                        <div class="form-group">
+                            <label for="currentPassword">Mật khẩu hiện tại:</label>
+                            <input type="password" id="currentPassword" class="form-control"
+                                   placeholder="Nhập mật khẩu hiện tại" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">Mật khẩu mới:</label>
+                            <input type="password" id="newPassword" class="form-control" placeholder="Nhập mật khẩu mới"
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Xác nhận mật khẩu mới:</label>
+                            <input type="password" id="confirmPassword" class="form-control"
+                                   placeholder="Xác nhận mật khẩu mới" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Đổi Mật Khẩu</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.getElementById('changePasswordForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                alert('Mật khẩu mới và xác nhận mật khẩu không khớp.');
+                return;
+            }
+            alert('Đổi mật khẩu thành công!');
+            this.reset();
+        });
+    </script>
+</body>
+

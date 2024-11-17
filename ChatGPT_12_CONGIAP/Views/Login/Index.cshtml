@@ -1,5 +1,117 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    Layout = null;
 }
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: "Roboto", sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            /* Matching previous themes */
+            color: white;
+        }
+
+        .form {
+            position: relative;
+            z-index: 1;
+            background: #FFFFFF;
+            max-width: 350px;
+            width: 100%;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+            .form h1 {
+                font-size: 32px;
+                margin-bottom: 20px;
+                color: #EF3B3A;
+                /* Red theme for headings */
+            }
+
+            .form .thumbnail {
+                background: #EF3B3A;
+                width: 120px;
+                height: 120px;
+                margin: 0 auto 20px;
+                padding: 20px;
+                border-radius: 50%;
+                box-sizing: border-box;
+            }
+
+                .form .thumbnail img {
+                    width: 100%;
+                    display: block;
+                }
+
+            .form input {
+                outline: none;
+                background: #f2f2f2;
+                width: 100%;
+                border: none;
+                margin: 0 0 15px;
+                padding: 15px;
+                border-radius: 5px;
+                font-size: 16px;
+            }
+
+            .form button {
+                outline: none;
+                background: #EF3B3A;
+                width: 100%;
+                border: none;
+                padding: 15px;
+                border-radius: 5px;
+                color: #FFFFFF;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background 0.3s ease;
+            }
+
+                .form button:hover {
+                    background: #cc3232;
+                }
+
+            .form .message {
+                margin-top: 15px;
+                color: #4d4d4d;
+                font-size: 14px;
+            }
+
+                .form .message a {
+                    color: #EF3B3A;
+                    text-decoration: none;
+                }
+    </style>
+</head>
+
+<body>
+    <div class="form">
+        <h1>Login</h1>
+        <div class="thumbnail">
+            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/169963/hat.svg" alt="User Icon">
+        </div>
+        <form class="login-form">
+            <input id="username_login" type="text" placeholder="Username" required />
+            <input id="password_login" type="password" placeholder="Password" required />
+            <button onclick="loginRequest()" type="submit">Login</button>
+        </form>
+    </div>
+
+    <script src="~/js/login.js" asp-append-version="true"></script>
+</body>
+
+</html>

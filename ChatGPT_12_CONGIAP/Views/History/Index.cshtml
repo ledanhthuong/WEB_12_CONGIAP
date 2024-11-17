@@ -1,0 +1,215 @@
+﻿
+@{
+    Layout = "_Layout";
+}
+
+<head>
+    <title>Lịch Sử Làm Bài</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+          integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            margin: 0;
+           
+            padding: 0;
+        }
+
+        .title-section {
+            
+            background-color: #ff4d4d;
+            padding: 20px;
+        
+            text-align: center;
+        }
+
+        .title-section h1 {
+            font-size: 2.5rem;
+            color: white;
+            margin: 0;
+        }
+
+        .content-wrapper {
+            max-width: 90%;
+            margin: 30px auto;
+            padding: 20px;
+            background: #1b2b4d;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .team-info-card {
+            background: #2b4066;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            color: white;
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+
+        .team-info-card h4 {
+            color: #ffc107;
+            margin-bottom: 15px;
+        }
+
+        .history-table {
+            width: 100%;
+            color: white;
+            text-align: center;
+            border-collapse: collapse;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 10px 15px;
+            border: 1px solid #243a5e;
+        }
+
+        .history-table thead th {
+            background: #243a5e;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .status-not-assigned {
+            color: red;
+            font-weight: bold;
+        }
+
+        .status-completed {
+            color: green;
+            font-weight: bold;
+        }
+
+        .btn-action {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-action:hover {
+            background-color: #cc3a3a;
+        }
+
+        .details-container {
+            display: none;
+            background: #2b4066;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .details-container h4 {
+            color: #ffc107;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .details-container p {
+            margin-bottom: 10px;
+        }
+
+        .btn-close-details {
+            background-color: #ff4d4d;
+            color: white;
+            font-size: 0.9rem;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            display: block;
+            width: 100%;
+        }
+
+        .btn-close-details:hover {
+            background-color: #cc3a3a;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Tiêu đề -->
+    <div class="title-section">
+        <h1><i class="fas fa-history"></i> Lịch Sử Làm Bài Của Team</h1>
+    </div>
+
+    <!-- Nội dung -->
+    <div class="content-wrapper">
+        <!-- Thông tin team -->
+        <div class="team-info-card">
+            <h4><i class="fas fa-users"></i> Thông Tin Team</h4>
+            <p><strong>Tên Team:</strong> Team Alpha</p>
+            <p><strong>Email Nhóm:</strong> alpha@example.com</p>
+            <p><strong>Thành Viên:</strong> Nguyễn Văn A, Trần Thị B</p>
+        </div>
+
+        <!-- Bảng lịch sử làm bài -->
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Tên Bài Thi</th>
+                    <th>Trạng Thái</th>
+                    <th>Điểm Mô Tả</th>
+                    <th>Điểm Hình Ảnh</th>
+                    <th>Điểm Video</th>
+                    <th>Điểm Tổng</th>
+                    <th>Thời Gian Hoàn Thành</th>
+                    <th>Xem Chi Tiết</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Bài Thi 1</td>
+                    <td class="status-completed">Hoàn thành</td>
+                    <td>9</td>
+                    <td>8</td>
+                    <td>7</td>
+                    <td>24</td>
+                    <td>2024-11-16 10:30 AM</td>
+                    <td><button class="btn-action" onclick="showDetails()">Xem</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Chi tiết bài thi -->
+        <div id="detailsContainer" class="details-container">
+            <h4><i class="fas fa-file-alt"></i> Chi Tiết Bài Thi</h4>
+            <div id="detailsContent">
+                <p><strong>Tên Bài Thi:</strong> Bài Thi 1</p>
+                <p><strong>Trạng Thái:</strong> Hoàn thành</p>
+                <p><strong>Điểm Mô Tả:</strong> 9</p>
+                <p><strong>Nhận Xét:</strong> Giám khảo A: "Rõ ràng và đầy đủ thông tin."</p>
+                <p><strong>Điểm Hình Ảnh:</strong> 8</p>
+                <p><strong>Nhận Xét:</strong> Giám khảo B: "Hình ảnh sắc nét và thuyết phục."</p>
+                <p><strong>Điểm Video:</strong> 7</p>
+                <p><strong>Nhận Xét:</strong> Giám khảo C: "Video sáng tạo nhưng hơi dài."</p>
+                <p><strong>Tổng Điểm:</strong> 24</p>
+                <p><strong>Thời Gian Hoàn Thành:</strong> 2024-11-16 10:30 AM</p>
+            </div>
+            <button class="btn-close-details" onclick="hideDetails()">Đóng</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        function showDetails() {
+            document.getElementById('detailsContainer').style.display = 'block';
+        }
+
+        function hideDetails() {
+            document.getElementById('detailsContainer').style.display = 'none';
+        }
+    </script>
+</body>

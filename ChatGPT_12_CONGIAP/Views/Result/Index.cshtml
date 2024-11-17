@@ -1,0 +1,208 @@
+﻿
+@{
+    Layout = "_Layout";
+}
+
+
+<head>
+
+    <title>Kết Quả và Thứ Hạng</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+          integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        .leaderboard {
+            width: 90%;
+            max-width: 800px;
+            margin: 50px auto;
+            background: #1b2b4d;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            color: white;
+        }
+
+        .leaderboard h1 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            color: #ffc107;
+        }
+
+        .leaderboard table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .leaderboard th,
+        .leaderboard td {
+            padding: 10px 15px;
+            text-align: center;
+        }
+
+        .leaderboard th {
+            color: white;
+            text-transform: uppercase;
+            background: #2b4066;
+            font-size: 0.9rem;
+        }
+
+        .leaderboard td {
+            font-size: 0.9rem;
+        }
+
+        .leaderboard tr:nth-child(odd) {
+            background: #243a5e;
+        }
+
+        .leaderboard tr:nth-child(even) {
+            background: #1b2b4d;
+        }
+
+        .leaderboard .rank-first {
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        .leaderboard .rank-second {
+            color: #c0c0c0;
+            font-weight: bold;
+        }
+
+        .leaderboard .rank-third {
+            color: #cd7f32;
+            font-weight: bold;
+        }
+
+        .leaderboard .icon {
+            font-size: 1.2rem;
+            margin-right: 5px;
+        }
+
+        .details-section {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            background: #1b2b4d;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            color: white;
+        }
+
+        .details-section h2 {
+            text-align: center;
+            color: #ffc107;
+            margin-bottom: 20px;
+        }
+
+        .details-content {
+            display: flex;
+            gap: 20px;
+            justify-content: space-between;
+        }
+
+        .details-card {
+            flex: 1;
+            border: 1px solid #2b4066;
+            border-radius: 10px;
+            padding: 15px;
+            background: #243a5e;
+            text-align: center;
+        }
+
+        .details-card h4 {
+            margin-bottom: 10px;
+            color: #ffc107;
+        }
+
+        .details-card img,
+        .details-card video {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Leaderboard -->
+    <div class="leaderboard">
+        <h1><i class="fas fa-trophy"></i> Kết Quả Chấm Bài</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Tên Team</th>
+                    <th>Điểm Mô Tả</th>
+                    <th>Điểm Hình Ảnh</th>
+                    <th>Điểm Video</th>
+                    <th>Tổng Điểm</th>
+                    <th>Thứ Hạng</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Team Alpha</td>
+                    <td>10</td>
+                    <td>9</td>
+                    <td>8</td>
+                    <td>27</td>
+                    <td class="rank-first"><i class="fas fa-trophy icon"></i> 1</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Team Beta</td>
+                    <td>8</td>
+                    <td>8</td>
+                    <td>7</td>
+                    <td>23</td>
+                    <td class="rank-second"><i class="fas fa-medal icon"></i> 2</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Team Gamma</td>
+                    <td>7</td>
+                    <td>7</td>
+                    <td>6</td>
+                    <td>20</td>
+                    <td class="rank-third"><i class="fas fa-award icon"></i> 3</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Details Section -->
+    <div class="details-section">
+        <h2>Chi Tiết Bài Thi - Team Alpha</h2>
+        <div class="details-content">
+            <div class="details-card">
+                <h4><i class="fas fa-pencil-alt"></i> Mô Tả</h4>
+                <p>Phần mô tả sáng tạo, ý tưởng rõ ràng và trình bày ấn tượng.</p>
+                <p><strong>Điểm: 10</strong></p>
+            </div>
+            <div class="details-card">
+                <h4><i class="fas fa-image"></i> Hình Ảnh</h4>
+                <img src="https://via.placeholder.com/300" alt="Hình ảnh bài thi">
+                <p><strong>Điểm: 9</strong></p>
+            </div>
+            <div class="details-card">
+                <h4><i class="fas fa-video"></i> Video</h4>
+                <video controls>
+                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                    Trình duyệt của bạn không hỗ trợ video.
+                </video>
+                <p><strong>Điểm: 8</strong></p>
+            </div>
+        </div>
+    </div>
+</body>
