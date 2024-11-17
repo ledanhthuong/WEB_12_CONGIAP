@@ -1,27 +1,4 @@
 ﻿
-document.getElementById('loadUsers').addEventListener('click', function () {
-    fetch('http://127.0.0.1:5000/user') // Your Flask API URL
-        .then(response => response.json()) // Parse JSON data
-        .then(data => {
-            const users = data; // Your fetched data
-            const tableBody = document.querySelector('#userTable tbody');
-            tableBody.innerHTML = ''; // Clear existing table data
-
-            users.forEach(user => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                                    <td>${user.user_id}</td>
-                                    <td>${user.name}</td>
-                                    <td>${user.email}</td>
-                                    <td>${user.group_id}</td>
-                                `;
-                tableBody.appendChild(row);
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching user data:', error);
-        });
-});
 
 function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('active');
@@ -61,3 +38,19 @@ function scrollToTop() {
         behavior: "smooth"
     });
 }
+
+
+// Kiểm tra nếu "username" có trong localStorage
+const username = localStorage.getItem("username");
+const teamId = localStorage.getItem("team_id");
+
+if (username && teamId) {
+    console.log("Username and Team ID are already in localStorage.");
+    // Thực hiện hành động khi đã có giá trị trong localStorage
+} else {
+    console.log("No username or team ID found in localStorage.");
+    // Thực hiện hành động khi không có giá trị trong localStorage
+}
+
+// Thay đổi nội dung của thẻ <span> bên trong phần tử có ID "username"
+document.getElementById("username").getElementsByTagName("span")[0].textContent = username;

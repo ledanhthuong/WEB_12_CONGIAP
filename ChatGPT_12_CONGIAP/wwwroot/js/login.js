@@ -1,106 +1,72 @@
-﻿// Login request
-async function loginRequest() {
-    
-}
+﻿$(document).ready(function () {
+    $(".login-form button").on("click", function (e) {
+        e.preventDefault(); // Ngăn chặn reload trang mặc định khi bấm nút
 
-// Hàm gọi API để tìm kiếm group_id dựa trên user_id
-async function getGroupId(userId) {
-    const apiUrl = `https://localhost:5000/user`;
+        // Lấy giá trị từ input
+        const username = $("#username_login").val().trim();
+        const password = $("#password_login").val().trim();
 
-    try {
-        // Gửi request tới API
-        const response = await fetch(apiUrl, {
-            method: 'POST', // Hoặc 'GET' nếu API yêu cầu phương thức khác
-            headers: {
-                'Content-Type': 'application/json' // Cấu hình Content-Type
-            },
-            body: JSON.stringify({ user_id: userId }) // Truyền user_id trong body (nếu POST)
-        });
-
-        // Kiểm tra trạng thái phản hồi
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        // Chuyển đổi kết quả trả về thành JSON
-        const data = await response.json();
-
-        // Trả về group_id từ dữ liệu trả về
-        return data.group_id;
-    } catch (error) {
-        console.error('Error fetching group_id:', error);
-        return null; // Xử lý lỗi và trả về giá trị mặc định nếu thất bại
-    }
-}
-
-
-
-//Check login
-document.querySelector('.login-form button').addEventListener('click', function (e) {
-
-    try {
-        // Get the email and password input elements
-        const emailInput = document.getElementById("username_login");
-        const passwordInput = document.getElementById("password_login");
-
-        // Extract values and trim whitespace
-        const email = emailInput.value.trim();
-        const password = passwordInput.value.trim();
-
-        // Check if email and password are not empty
-        if (!email || !password) {
-            showErrorToast("Email and password are required");
+        // Kiểm tra nếu email hoặc password trống
+        if (!username || !password) {
+            alert("Tên và mật khẩu không được để trống!");
             return;
         }
 
-        // Create the JSON payload
+        // Chuẩn bị payload cho request
         const request = {
-            email: email,
-            password: password
+            username: username,
+            password: password,
         };
 
-        // Make an AJAX request using the Fetch API
-        const response = await fetch('https://localhost:5000/user/authenticate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=UTF-8'
+        console.log("Sending request:", request);
+
+        // Gửi yêu cầu AJAX
+        $.ajax({
+            url: "http://127.0.0.1:5000/user/authenticate", // URL API
+            method: "POST",
+            data: JSON.stringify(request),
+            contentType: "application/json",
+            success: function (response) {
+                console.log("Login successful", response);
+
+                // Kiểm tra và xử lý group_id
+                if (response && response.group_id !== undefined) {
+                    const groupId = response.group_id;
+
+                    localStorage.setItem("username", username);
+                    localStorage.setItem("team_id", response.user_id);
+
+                    // Điều hướng dựa trên group_id
+                    switch (groupId) {
+                        case 0:
+                        case 1:
+                        case 2:
+                            window.location.href = '/Home';
+                            break;
+                        default:
+                            window.location.href = '/Home'; // Điều hướng mặc định
+                            break;
+                    }
+                } else {
+                    alert("Không thể lấy thông tin nhóm người dùng. Vui lòng thử lại.");
+                }
             },
-            body: JSON.stringify(request)
+            error: function (error) {
+                console.error("Login failed", error);
+                alert("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin!");
+            },
         });
-
-        // Check if the response is successful
-        if (!response.ok) {
-            throw new Error(`Login failed with status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        // Call getGroupId to fetch the group_id
-        const groupId = await getGroupId(data.user_id);
-
-        // Redirect based on group_id
-        switch (groupId) {
-            case 0:
-            case 1:
-            case 2:
-                window.location.href = '/Home';
-                break;
-            default:
-                window.location.href = '/Home'; // Default redirection if group_id is unknown
-                break;
-        }
-    } catch (error) {
-        // Handle errors that occur during the login process
-        console.error('Error during login request:', error);
-        showErrorToast('An error occurred during login. Please try again.');
-    }
-
-    e.preventDefault(); // Prevent default form submission
-
-    const formContainer = document.querySelector('.form');
-
-    // Add animation class
-    formContainer.classList.add('fade-out');
-
+    });
 });
 
+// Kiểm tra nếu "username" có trong localStorage
+const username = localStorage.getItem("username");
+const teamId = localStorage.getItem("team_id");
+
+if (username && teamId) {
+    console.log("Username and Team ID are already in localStorage.");
+    // Thực hiện hành động khi đã có giá trị trong localStorage
+} else {
+    console.log("No username or team ID found in localStorage.");
+    // Thực hiện hành động khi không có giá trị trong localStorage
+}

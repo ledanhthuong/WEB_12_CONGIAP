@@ -6,7 +6,10 @@
 <div class="container">
     <h1 class="exam-title">Cuộc thi Vẽ tranh cùng AI 2024</h1>
     <div class="chat-box" id="chatBox">
-        <textarea id="imageTopic" placeholder="Type the topic here..." rows="3"></textarea>
+        <textarea id="imageTopic" placeholder="Type the topic here..." rows="3"
+                  oninput="checkWordLimit(this, 1000)"></textarea>
+        <p id="wordCount" style="text-align: right; font-size: 1.5rem; color: #888;">0/1000 từ</p>
+
         <button id="saveButton" onclick="saveTopic()">Bạn còn 5 lần vẽ</button>
     </div>
     <div id="notification" class="hidden">
@@ -28,7 +31,7 @@
     <div id="imageModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
-            <p id="modalText"></p>
+            <img id="modalImage" src="#" alt="Phóng to hình ảnh" />
         </div>
     </div>
 

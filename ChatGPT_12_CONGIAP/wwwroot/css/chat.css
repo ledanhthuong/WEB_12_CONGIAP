@@ -1,5 +1,4 @@
-﻿
-/* Reset */
+﻿/* Reset */
 * {
     margin: 0;
     padding: 0;
@@ -68,6 +67,10 @@ body {
     font-size: 1rem;
     text-align: center;
     cursor: pointer;
+}
+.image-slot img{
+    width: 150px;
+    height: 150px;
 }
 
     .image-slot.filled {
@@ -304,5 +307,3 @@ td {
     #cancelButton:hover {
         background-color: #b02a37;
     }
-
-

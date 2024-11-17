@@ -48,5 +48,5 @@ setInterval(() => {
 
 function goToDrawingContest() {
     // Kiểm tra nếu trang đích có thể truy cập
-    window.location.href = 'exam.html'; // Đường dẫn phải chính xác
+    window.location.href = '/Chat'; // Đường dẫn phải chính xác
 }
