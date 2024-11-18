@@ -307,44 +307,53 @@ function downloadImage(stt) {
 function submitImages() {
     const selectedImage = document.querySelector('input[name="submitImage"]:checked');
     const videoLink = document.getElementById("videoLink").value.trim();
-    const errorMessage = document.getElementById('errorMessage');
 
-    // Clear previous error message
-    if (errorMessage) errorMessage.textContent = '';
-
-    // Kiểm tra nếu chưa chọn hình ảnh
+    // Clear any previous error messages
     if (!selectedImage) {
         showNotification("Vui lòng chọn một hình để nộp!");
         return;
     }
 
-    // Kiểm tra nếu link video chưa được nhập
     if (!videoLink) {
         showNotification("Vui lòng nhập link video của bạn!");
         return;
     }
 
-    // Regex để kiểm tra link YouTube
-    const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
     const match = videoLink.match(youtubeRegex);
 
-    if (!match || !match[1]) {
+    if (!match) {
         showNotification('Link không hợp lệ. Vui lòng nhập link YouTube đúng.');
         return;
     }
 
     const videoId = match[1];
 
-    // Hiển thị xác nhận trước khi nộp bài
     showConfirmation(
         `Bạn có chắc chắn muốn nộp hình STT ${selectedImage.value} với link video: ${videoLink}?`,
         () => {
-            showNotification(`Bạn đã nộp hình STT ${selectedImage.value} với link video: ${videoLink}`);
-            // Chuyển hướng đến trang khác nếu cần
-            window.location.href = `page2.html?videoId=${videoId}`;
+            $.ajax({
+                url: "http://127.0.0.1:5000/submission/create",
+                method: "POST",
+                data: JSON.stringify({
+                    prompt_id: selectedImage.value,
+                    video: videoLink,
+                }),
+                contentType: "application/json",
+                success: function (response) {
+                    showNotification("Nộp bài thành công!");
+                    console.log("Response:", response);
+                    window.location.href = `./History?videoId=${videoId}`;
+                },
+                error: function (error) {
+                    console.error("Lỗi nộp bài:", error);
+                    showNotification("Nộp bài thất bại. Vui lòng thử lại.");
+                },
+            });
         }
     );
 }
+
 
 /**
  * Word limit check for the textarea.
@@ -365,3 +374,5 @@ function checkWordLimit(textarea, maxWords) {
 }
 // Initialize the page
 document.addEventListener("DOMContentLoaded", initializePage);
+
+
