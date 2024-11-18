@@ -25,6 +25,7 @@ function initializePage() {
             currentSlot = teamPrompts.length;
 
             // Reload saved images and topics
+            tableBody.innerHTML = ""; // Clear existing rows
             teamPrompts.forEach((prompt, index) => {
                 if (prompt.image) {
                     updateSlot(index + 1, prompt.image);
@@ -151,14 +152,14 @@ function saveTopic() {
 
         let progress = 0;
         const interval = setInterval(() => {
-            if (progress < 90) {
+            if (progress < 100) {
                 progress += 10;
                 const progressElement = document.getElementById(`progress-${currentSlot + 1}`);
                 if (progressElement) {
                     progressElement.textContent = `${progress}%`;
                 }
             }
-        }, 500);
+        }, 800);
 
         // Send request to create a new prompt
         $.ajax({
@@ -170,7 +171,7 @@ function saveTopic() {
                 clearInterval(interval);
 
                 setTimeout(() => {
-                    progress = 100;
+                    progress = 101;
                     const progressElement = document.getElementById(`progress-${currentSlot + 1}`);
                     if (progressElement) {
                         progressElement.textContent = `${progress}%`;
@@ -189,7 +190,7 @@ function saveTopic() {
                         slotElement.innerHTML = "Không thể vẽ hình ảnh. Vui lòng thử lại.";
                         slotElement.classList.remove("loading");
                     }
-                }, 500);
+                }, 800);
             },
 
             error: function (error) {
@@ -230,7 +231,9 @@ function handleSlotClick(slot) {
         const modalImage = document.getElementById("modalImage");
         modalImage.src = imgElement.src;
         modal.style.display = "block";
-    } 
+    } else {
+        showNotification("Không có hình ảnh để phóng to!");
+    }
 }
 function closeModal() {
     document.getElementById("imageModal").style.display = "none";

@@ -50,7 +50,18 @@ if (username && teamId) {
 } else {
     console.log("No username or team ID found in localStorage.");
     // Thực hiện hành động khi không có giá trị trong localStorage
+    window.location.href = "./Login";
 }
 
 // Thay đổi nội dung của thẻ <span> bên trong phần tử có ID "username"
 document.getElementById("username").getElementsByTagName("span")[0].textContent = username;
+
+function dangXuat() {
+
+
+    localStorage.removeItem('username');
+    localStorage.removeItem('team_id');
+  
+        window.location.href = "./Login";
+    
+}
