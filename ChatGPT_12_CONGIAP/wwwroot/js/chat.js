@@ -46,6 +46,44 @@ function initializePage() {
 }
 
 /**
+ * Initialize the page by fetching existing prompts and displaying them.
+ */
+function initializePage() {
+    const teamId = localStorage.getItem("team_id");
+    if (!teamId) {
+        showNotification("Không tìm thấy team_id. Vui lòng đăng nhập!");
+        saveButton.textContent = "Không tìm thấy team_id";
+        saveButton.disabled = true;
+        return;
+    }
+
+    // Fetch existing prompts from the API
+    $.ajax({
+        url: "http://127.0.0.1:5000/prompts",
+        method: "GET",
+        success: function (response) {
+            const teamPrompts = response.filter(prompt => prompt.team_id === parseInt(teamId, 10));
+            currentSlot = teamPrompts.length;
+
+            // Reload saved images and topics
+            teamPrompts.forEach((prompt, index) => {
+                if (prompt.image) {
+                    updateSlot(index + 1, prompt.image);
+                    addTableRow(index + 1, prompt.prompt);
+                }
+            });
+
+            // Update the save button based on remaining slots
+            updateSaveButtonText();
+        },
+        error: function (error) {
+            console.error("Lỗi khi tải dữ liệu từ API:", error);
+            showNotification("Không thể tải dữ liệu. Vui lòng thử lại!");
+        }
+    });
+}
+
+/**
  * Show a notification.
  * @param {string} message The notification message.
  * @param {number} duration Auto-dismiss duration (in ms). Default: 3000ms.
@@ -273,22 +311,6 @@ function addTableRow(stt, topic) {
     `;
     tableBody.appendChild(row);
 }
-function downloadImage(stt) {
-    // Tìm ảnh tương ứng trong slot
-    const slot = document.querySelector(`.image-slot[data-slot="${stt}"] img`);
-
-    if (!slot || !slot.src) {
-        showNotification("Không tìm thấy ảnh để tải về!");
-        return;
-    }
-
-    // Tạo một thẻ <a> để tải ảnh
-    const link = document.createElement("a");
-    link.href = slot.src; // Đường dẫn ảnh (base64)
-    link.download = `image_slot_${stt}.png`; // Tên file khi tải
-    link.click(); // Tự động kích hoạt tải ảnh
-}
-
 
 /**
  * Update the save button text based on remaining slots.
