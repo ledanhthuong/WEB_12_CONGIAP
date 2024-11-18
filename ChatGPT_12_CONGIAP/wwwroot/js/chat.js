@@ -154,8 +154,13 @@ function saveTopic() {
 
         let progress = 0;
         const interval = setInterval(() => {
+<<<<<<< HEAD
             if (progress < 90) {
                 progress += 5;
+=======
+            if (progress < 100) {
+                progress += 10;
+>>>>>>> thuong
                 const progressElement = document.getElementById(`progress-${currentSlot + 1}`);
                 if (progressElement) {
                     progressElement.textContent = `${progress}%`;
@@ -173,7 +178,7 @@ function saveTopic() {
                 clearInterval(interval);
 
                 setTimeout(() => {
-                    progress = 100;
+                    progress = 101;
                     const progressElement = document.getElementById(`progress-${currentSlot + 1}`);
                     if (progressElement) {
                         progressElement.textContent = `${progress}%`;
@@ -187,9 +192,6 @@ function saveTopic() {
                         currentSlot++; // Tăng số lượng slot đã dùng
                         updateSaveButtonText(); // Cập nhật trạng thái nút lưu
                         initializePage();//load hinh len
-
-
-
 
                     } else {
                         slotElement.innerHTML = "Không thể vẽ hình ảnh. Vui lòng thử lại.";
@@ -235,6 +237,11 @@ function handleSlotClick(slot) {
         const modalImage = document.getElementById("modalImage");
         modalImage.src = imgElement.src;
         modal.style.display = "block";
+<<<<<<< HEAD
+=======
+    } else {
+        showNotification("Không có hình ảnh để phóng to!");
+>>>>>>> thuong
     }
 }
 function closeModal() {
