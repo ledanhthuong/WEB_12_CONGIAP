@@ -3,13 +3,12 @@ const maxSlots = 5;
 const saveButton = document.getElementById("saveButton");
 const tableBody = document.querySelector("#imageTable tbody");
 let confirmCallback = null; // Callback for confirmations
-
 /**
  * Initialize the page by fetching existing prompts and displaying them.
  */
 function initializePage() {
-    const teamId = localStorage.getItem("team_id");
-    if (!teamId) {
+    
+    if (!user_id) {
         showNotification("Không tìm thấy team_id. Vui lòng đăng nhập!");
         saveButton.textContent = "Không tìm thấy team_id";
         saveButton.disabled = true;
@@ -21,8 +20,9 @@ function initializePage() {
         url: "http://127.0.0.1:5000/prompts",
         method: "GET",
         success: function (response) {
-            const teamPrompts = response.filter(prompt => prompt.team_id === parseInt(teamId, 10));
+            const teamPrompts = response.filter(prompt => prompt.team_id === parseInt(user_id, 10));
             currentSlot = teamPrompts.length;
+
 
             // Reload saved images and topics
             tableBody.innerHTML = ""; // Clear existing rows
@@ -114,9 +114,9 @@ function hideNotification() {
  */
 function saveTopic() {
     const topic = document.getElementById("imageTopic").value.trim();
-    const teamId = localStorage.getItem("team_id");
+    
 
-    if (!topic || !teamId) {
+    if (!topic || !user_id) {
         showNotification("Câu truy vấn không được để trống!");
         return;
     }
@@ -135,7 +135,7 @@ function saveTopic() {
 
     // Prepare request payload
     const request = {
-        team_id: teamId,
+        team_id: user_id,
         prompt: topic,
     };
 
@@ -307,44 +307,66 @@ function downloadImage(stt) {
     link.download = `image_slot_${stt}.png`;
     link.click();
 }
+
 function submitImages() {
     const selectedImage = document.querySelector('input[name="submitImage"]:checked');
-    const videoLink = document.getElementById("videoLink").value.trim();
-    const errorMessage = document.getElementById('errorMessage');
-
-    // Clear previous error message
-    if (errorMessage) errorMessage.textContent = '';
-
-    // Kiểm tra nếu chưa chọn hình ảnh
     if (!selectedImage) {
         showNotification("Vui lòng chọn một hình để nộp!");
         return;
     }
 
-    // Kiểm tra nếu link video chưa được nhập
-    if (!videoLink) {
-        showNotification("Vui lòng nhập link video của bạn!");
-        return;
-    }
-
-    // Regex để kiểm tra link YouTube
-    const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-    const match = videoLink.match(youtubeRegex);
-
-    if (!match || !match[1]) {
-        showNotification('Link không hợp lệ. Vui lòng nhập link YouTube đúng.');
-        return;
-    }
-
-    const videoId = match[1];
-
-    // Hiển thị xác nhận trước khi nộp bài
     showConfirmation(
-        `Bạn có chắc chắn muốn nộp hình STT ${selectedImage.value} với link video: ${videoLink}?`,
+        `Bạn có chắc chắn muốn nộp hình STT ${selectedImage.value} ?`,
         () => {
-            showNotification(`Bạn đã nộp hình STT ${selectedImage.value} với link video: ${videoLink}`);
-            // Chuyển hướng đến trang khác nếu cần
-            window.location.href = `page2.html?videoId=${videoId}`;
+            const request1 = { team_id: user_id };
+
+            // Gọi API đầu tiên để lấy prompt_id với query parameter team_id
+            $.ajax({
+                url: `http://127.0.0.1:5000/prompts?team_id=${user_id}`, // Fixed URL with query parameter
+                method: "GET",
+                contentType: "application/json",
+                success: function (response) {
+                    console.log("Phản hồi từ API /prompts:", response);
+
+                    // Kiểm tra phản hồi và truy cập prompt_id
+                    if (response && response.length > 0) {
+                        const selectedIndex = selectedImage.value - 1; // Chuyển STT thành chỉ số mảng
+                        const promptId = response[selectedIndex]?.prompt_id;
+
+                        if (promptId) {
+                            console.log("Prompt ID:", promptId);
+
+                            // Gọi API thứ hai để nộp bài
+                            const submissionRequest = { prompt_id: promptId };
+
+                            $.ajax({
+                                url: "http://127.0.0.1:5000/submission/create",
+                                method: "POST",
+                                data: JSON.stringify(submissionRequest),
+                                contentType: "application/json",
+                                success: function () {
+                                    showNotification("Nộp bài thành công!");
+                                    window.location.href = "./History";
+                                },
+                                error: function (error) {
+                                    console.error("Lỗi khi nộp bài:", error);
+                                    showNotification("Nộp bài thất bại. Vui lòng thử lại.");
+                                },
+                            });
+                        } else {
+                            console.error("Không tìm thấy prompt_id tại vị trí được chọn:", selectedIndex);
+                            showNotification("Không tìm thấy prompt_id cho hình được chọn. Vui lòng thử lại.");
+                        }
+                    } else {
+                        console.error("Phản hồi API /prompts rỗng hoặc không hợp lệ:", response);
+                        showNotification("Không lấy được dữ liệu từ API. Vui lòng thử lại.");
+                    }
+                },
+                error: function (error) {
+                    console.error("Lỗi khi gọi API /prompts:", error);
+                    showNotification("Không thể kết nối đến máy chủ. Vui lòng kiểm tra mạng hoặc thử lại sau.");
+                }
+            });
         }
     );
 }
@@ -368,3 +390,6 @@ function checkWordLimit(textarea, maxWords) {
 }
 // Initialize the page
 document.addEventListener("DOMContentLoaded", initializePage);
+
+
+document.getElementById("username").getElementsByTagName("span")[0].textContent = username;
