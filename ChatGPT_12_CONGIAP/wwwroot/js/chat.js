@@ -1,9 +1,46 @@
 ﻿let currentSlot = 0;
-let slot = 1;
 const maxSlots = 5;
 const saveButton = document.getElementById("saveButton");
 const tableBody = document.querySelector("#imageTable tbody");
 let confirmCallback = null; // Callback for confirmations
+
+/**
+ * Initialize the page by fetching existing prompts and displaying them.
+ */
+function initializePage() {
+    const teamId = localStorage.getItem("team_id");
+    if (!teamId) {
+        showNotification("Không tìm thấy team_id. Vui lòng đăng nhập!");
+        saveButton.textContent = "Không tìm thấy team_id";
+        saveButton.disabled = true;
+        return;
+    }
+
+    // Fetch existing prompts from the API
+    $.ajax({
+        url: "http://127.0.0.1:5000/prompts",
+        method: "GET",
+        success: function (response) {
+            const teamPrompts = response.filter(prompt => prompt.team_id === parseInt(teamId, 10));
+            currentSlot = teamPrompts.length;
+
+            // Reload saved images and topics
+            teamPrompts.forEach((prompt, index) => {
+                if (prompt.image) {
+                    updateSlot(index + 1, prompt.image);
+                    addTableRow(index + 1, prompt.prompt);
+                }
+            });
+
+            // Update the save button based on remaining slots
+            updateSaveButtonText();
+        },
+        error: function (error) {
+            console.error("Lỗi khi tải dữ liệu từ API:", error);
+            showNotification("Không thể tải dữ liệu. Vui lòng thử lại!");
+        }
+    });
+}
 
 /**
  * Show a notification.
@@ -76,21 +113,13 @@ function saveTopic() {
     const topic = document.getElementById("imageTopic").value.trim();
     const teamId = localStorage.getItem("team_id");
 
-    // Check if topic or teamId is empty
     if (!topic || !teamId) {
-        showNotification("Không được để trống!");
+        showNotification("Câu truy vấn không được để trống!");
         return;
     }
 
-    // Prepare request payload
-    const request = {
-        team_id: teamId,
-        prompt: topic,
-    };
-
     // Check word limit
     const words = topic.split(/\s+/).filter(word => word !== "");
-
     if (words.length > 1000) {
         showNotification("Đề tài không được vượt quá 1000 từ. Vui lòng chỉnh sửa lại!");
         return;
@@ -100,6 +129,12 @@ function saveTopic() {
         showNotification("Bạn đã sử dụng hết lượt vẽ!");
         return;
     }
+
+    // Prepare request payload
+    const request = {
+        team_id: teamId,
+        prompt: topic,
+    };
 
     // Show confirmation before saving
     showConfirmation(`Bạn có chắc muốn vẽ với đề tài "${topic}" không?`, () => {
@@ -114,11 +149,10 @@ function saveTopic() {
         slotElement.innerHTML = `<div class="loading-indicator">Đang vẽ... <span id="progress-${currentSlot + 1}">0%</span></div>`;
         slotElement.classList.add("loading");
 
-        // Track loading progress
         let progress = 0;
         const interval = setInterval(() => {
             if (progress < 90) {
-                progress += 10; // Increment progress up to 90%
+                progress += 10;
                 const progressElement = document.getElementById(`progress-${currentSlot + 1}`);
                 if (progressElement) {
                     progressElement.textContent = `${progress}%`;
@@ -126,21 +160,16 @@ function saveTopic() {
             }
         }, 500);
 
-        // Send AJAX request
-        const startTime = Date.now();
+        // Send request to create a new prompt
         $.ajax({
             url: "http://127.0.0.1:5000/prompt/create",
             method: "POST",
             data: JSON.stringify(request),
             contentType: "application/json",
             success: function (response) {
-                clearInterval(interval); // Clear progress interval
-
-                const elapsedTime = Date.now() - startTime;
-                const remainingTime = Math.max(0, 5000 - elapsedTime); // Ensure a minimum 5-second duration
+                clearInterval(interval);
 
                 setTimeout(() => {
-                    // Complete progress and display image
                     progress = 100;
                     const progressElement = document.getElementById(`progress-${currentSlot + 1}`);
                     if (progressElement) {
@@ -148,45 +177,80 @@ function saveTopic() {
                     }
 
                     if (response) {
-                        const base64String = response;
-                        updateSlot(currentSlot + 1, base64String);
+                        const base64String = response.image;
+                        updateSlot(currentSlot + 1, base64String); // Cập nhật slot ngay
+                        addTableRow(currentSlot + 1, topic); // Cập nhật bảng ngay
 
-                        currentSlot++;
-                        updateSaveButtonText();
-                        addTableRow(currentSlot, topic);
+                        currentSlot++; // Tăng số lượng slot đã dùng
+                        updateSaveButtonText(); // Cập nhật trạng thái nút lưu
+
+                        showNotification("Hình ảnh đã được vẽ thành công!");
                     } else {
                         slotElement.innerHTML = "Không thể vẽ hình ảnh. Vui lòng thử lại.";
                         slotElement.classList.remove("loading");
-                        alert("Không thể vẽ hình ảnh. Vui lòng thử lại.");
                     }
-                }, remainingTime);
+                }, 500);
             },
+
             error: function (error) {
-                clearInterval(interval); // Clear progress interval
+                clearInterval(interval);
                 slotElement.innerHTML = "Vẽ thất bại!";
                 slotElement.classList.remove("loading");
-                console.error("Vẽ thất bại", error);
-                alert("Vẽ thất bại. Vui lòng kiểm tra lại thông tin!");
-            },
+                console.error("Vẽ thất bại:", error);
+                showNotification("Vẽ thất bại. Vui lòng thử lại!");
+            }
         });
     });
 }
 
 /**
-* Update a slot with the generated image.
-* @param {number} slotNumber The slot number.
-* @param {string} base64String The base64 image string.
-*/
+ * Update a slot with the generated image.
+ * @param {number} slotNumber The slot number.
+ * @param {string} base64String The base64 string of the image.
+ */
 function updateSlot(slotNumber, base64String) {
     const slot = document.querySelector(`.image-slot[data-slot="${slotNumber}"]`);
-
     if (slot) {
         slot.classList.remove("loading");
-        slot.innerHTML = `<img src="data:image/png;base64,${base64String}" alt="Generated Image" />`;
+        slot.innerHTML = `<img src="data:image/png;base64,${base64String}" alt="Generated Image" onclick="handleSlotClick(this)" />`;
     } else {
-        console.error(`Slot with data-slot="${slotNumber}" not found.`);
+        console.error(`Không tìm thấy slot với data-slot="${slotNumber}".`);
     }
 }
+
+
+/**
+ * Handle slot click for viewing details (Zoom Image).
+ * @param {HTMLImageElement} imgElement The clicked image.
+ */
+function handleSlotClick(slot) {
+    const imgElement = slot.querySelector("img");
+    if (imgElement) {
+        const modal = document.getElementById("imageModal");
+        const modalImage = document.getElementById("modalImage");
+        modalImage.src = imgElement.src;
+        modal.style.display = "block";
+    } else {
+        showNotification("Không có hình ảnh để phóng to!");
+    }
+}
+function closeModal() {
+    document.getElementById("imageModal").style.display = "none";
+}
+window.addEventListener("click", function (event) {
+    const modal = document.getElementById("imageModal");
+    const modalContent = document.querySelector(".modal-content");
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+});
+/**
+ * Close the modal view when clicking on the close button.
+ */
+function closeModal() {
+    document.getElementById("imageModal").style.display = "none";
+}
+
 /**
  * Add a new row to the table for the saved topic.
  * @param {number} stt The slot number.
@@ -203,68 +267,40 @@ function addTableRow(stt, topic) {
     `;
     tableBody.appendChild(row);
 }
-function downloadImage(stt) {
-    // Tìm ảnh tương ứng trong slot
-    const slot = document.querySelector(`.image-slot[data-slot="${stt}"] img`);
-
-    if (!slot || !slot.src) {
-        showNotification("Không tìm thấy ảnh để tải về!");
-        return;
-    }
-
-    // Tạo một thẻ <a> để tải ảnh
-    const link = document.createElement("a");
-    link.href = slot.src; // Đường dẫn ảnh (base64)
-    link.download = `image_slot_${stt}.png`; // Tên file khi tải
-    link.click(); // Tự động kích hoạt tải ảnh
-}
-
 
 /**
  * Update the save button text based on remaining slots.
  */
 function updateSaveButtonText() {
     const remaining = maxSlots - currentSlot;
-    saveButton.textContent = `Bạn còn ${remaining} lần vẽ`;
-}
 
-/**
- * Handle slot click for viewing details.
- * @param {HTMLElement} slot The clicked slot.
- */
-function handleSlotClick(slot) {
-    const imgElement = slot.querySelector("img");
-    if (imgElement) {
-        const modal = document.getElementById("imageModal");
-        const modalImage = document.getElementById("modalImage");
-        modalImage.src = imgElement.src;
-        modal.style.display = "block";
+    if (remaining <= 0) {
+        saveButton.textContent = "Bạn còn 0 lần vẽ";
+        saveButton.disabled = true;
+        saveButton.classList.add("disabled");
     } else {
-        showNotification("Không có hình ảnh để phóng to!");
+        saveButton.textContent = `Bạn còn ${remaining} lần vẽ`;
+        saveButton.disabled = false;
+        saveButton.classList.remove("disabled");
     }
 }
-/**
-* Close the modal view when clicking on the close button.
-*/
-function closeModal() {
-    document.getElementById("imageModal").style.display = "none";
-}
 
 /**
- * Prevent the modal from closing when clicking outside of the modal content.
+ * Download an image from a slot.
+ * @param {number} stt The slot number.
  */
-window.addEventListener("click", function (event) {
-    const modal = document.getElementById("imageModal");
-    const modalContent = document.querySelector(".modal-content");
-    if (event.target === modal) {
-        modal.style.display = "none";
+function downloadImage(stt) {
+    const slot = document.querySelector(`.image-slot[data-slot="${stt}"] img`);
+    if (!slot || !slot.src) {
+        showNotification("Không tìm thấy ảnh để tải về!");
+        return;
     }
-});
 
-
-/**
- * Submit the selected images and video link.
- */
+    const link = document.createElement("a");
+    link.href = slot.src;
+    link.download = `image_slot_${stt}.png`;
+    link.click();
+}
 function submitImages() {
     const selectedImage = document.querySelector('input[name="submitImage"]:checked');
     const videoLink = document.getElementById("videoLink").value.trim();
@@ -307,7 +343,6 @@ function submitImages() {
     );
 }
 
-
 /**
  * Word limit check for the textarea.
  * @param {HTMLTextAreaElement} textarea The textarea element.
@@ -325,6 +360,5 @@ function checkWordLimit(textarea, maxWords) {
 
     wordCountElement.textContent = `${words.length}/${maxWords} từ`;
 }
-
-// Initialize save button text
-updateSaveButtonText();
+// Initialize the page
+document.addEventListener("DOMContentLoaded", initializePage);
