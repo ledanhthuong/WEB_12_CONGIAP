@@ -33,8 +33,9 @@
                 if (response && response.group_id !== undefined) {
                     const groupId = response.group_id;
 
-                    localStorage.setItem("username", username);
-                    localStorage.setItem("team_id", response.user_id);
+                    Cookies.set('username', request.username)
+                    Cookies.set('user_id', response.user_id)
+                    Cookies.set('group_id', response.group_id)
 
                     // Điều hướng dựa trên group_id
                     switch (groupId) {
@@ -59,14 +60,15 @@
     });
 });
 
-// Kiểm tra nếu "username" có trong localStorage
-const username = localStorage.getItem("username");
-const teamId = localStorage.getItem("team_id");
+// Kiểm tra nếu "username" có trong cookie
+let username = Cookies.get('username')
+let user_id = Cookies.get('user_id')
+let group_id = Cookies.get('group_id')
 
-if (username && teamId) {
-    console.log("Username and Team ID are already in localStorage.");
+if (username && user_id) {
+    console.log("Username and Team ID are already in  cookie.");
     // Thực hiện hành động khi đã có giá trị trong localStorage
 } else {
-    console.log("No username or team ID found in localStorage.");
+    console.log("No username or team ID found in  cookie.");
     // Thực hiện hành động khi không có giá trị trong localStorage
 }
