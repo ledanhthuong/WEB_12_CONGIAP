@@ -154,13 +154,10 @@ function saveTopic() {
 
         let progress = 0;
         const interval = setInterval(() => {
-<<<<<<< HEAD
-            if (progress < 90) {
-                progress += 5;
-=======
+
             if (progress < 100) {
                 progress += 10;
->>>>>>> thuong
+
                 const progressElement = document.getElementById(`progress-${currentSlot + 1}`);
                 if (progressElement) {
                     progressElement.textContent = `${progress}%`;
@@ -178,7 +175,7 @@ function saveTopic() {
                 clearInterval(interval);
 
                 setTimeout(() => {
-                    progress = 101;
+                    progress = 100;
                     const progressElement = document.getElementById(`progress-${currentSlot + 1}`);
                     if (progressElement) {
                         progressElement.textContent = `${progress}%`;
@@ -237,11 +234,7 @@ function handleSlotClick(slot) {
         const modalImage = document.getElementById("modalImage");
         modalImage.src = imgElement.src;
         modal.style.display = "block";
-<<<<<<< HEAD
-=======
-    } else {
-        showNotification("Không có hình ảnh để phóng to!");
->>>>>>> thuong
+
     }
 }
 function closeModal() {
