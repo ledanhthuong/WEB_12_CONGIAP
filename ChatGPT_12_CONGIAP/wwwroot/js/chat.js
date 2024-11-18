@@ -230,9 +230,7 @@ function handleSlotClick(slot) {
         const modalImage = document.getElementById("modalImage");
         modalImage.src = imgElement.src;
         modal.style.display = "block";
-    } else {
-        showNotification("Không có hình ảnh để phóng to!");
-    }
+    } 
 }
 function closeModal() {
     document.getElementById("imageModal").style.display = "none";
