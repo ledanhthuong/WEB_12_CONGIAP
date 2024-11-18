@@ -185,9 +185,6 @@ function saveTopic() {
                         updateSaveButtonText(); // Cập nhật trạng thái nút lưu
                         initializePage();//load hinh len
 
-
-
-
                     } else {
                         slotElement.innerHTML = "Không thể vẽ hình ảnh. Vui lòng thử lại.";
                         slotElement.classList.remove("loading");
