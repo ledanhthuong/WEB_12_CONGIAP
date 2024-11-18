@@ -25,12 +25,15 @@ function initializePage() {
             currentSlot = teamPrompts.length;
 
             // Reload saved images and topics
+            tableBody.innerHTML = ""; // Clear existing rows
             teamPrompts.forEach((prompt, index) => {
                 if (prompt.image) {
                     updateSlot(index + 1, prompt.image);
                     addTableRow(index + 1, prompt.prompt);
                 }
             });
+
+
 
             // Update the save button based on remaining slots
             updateSaveButtonText();
@@ -152,13 +155,13 @@ function saveTopic() {
         let progress = 0;
         const interval = setInterval(() => {
             if (progress < 90) {
-                progress += 10;
+                progress += 5;
                 const progressElement = document.getElementById(`progress-${currentSlot + 1}`);
                 if (progressElement) {
                     progressElement.textContent = `${progress}%`;
                 }
             }
-        }, 500);
+        }, 800);
 
         // Send request to create a new prompt
         $.ajax({
@@ -185,12 +188,14 @@ function saveTopic() {
                         updateSaveButtonText(); // Cập nhật trạng thái nút lưu
                         initializePage();//load hinh len
 
-         
+
+
+
                     } else {
                         slotElement.innerHTML = "Không thể vẽ hình ảnh. Vui lòng thử lại.";
                         slotElement.classList.remove("loading");
                     }
-                }, 500);
+                }, 800);
             },
 
             error: function (error) {
@@ -219,7 +224,6 @@ function updateSlot(slotNumber, base64String) {
     }
 }
 
-
 /**
  * Handle slot click for viewing details (Zoom Image).
  * @param {HTMLImageElement} imgElement The clicked image.
@@ -231,8 +235,6 @@ function handleSlotClick(slot) {
         const modalImage = document.getElementById("modalImage");
         modalImage.src = imgElement.src;
         modal.style.display = "block";
-    } else {
-        showNotification("Không có hình ảnh để phóng to!");
     }
 }
 function closeModal() {
