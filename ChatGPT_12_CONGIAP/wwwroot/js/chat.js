@@ -196,7 +196,7 @@ function saveTopic() {
             if (progress < 100) {
                 progress += 10;
 
-             const progressElement = document.getElementById(`progress-${currentSlot + 1}`);
+                const progressElement = document.getElementById(`progress-${currentSlot + 1}`);
                 if (progressElement) {
                     progressElement.textContent = `${progress}%`;
                 }
@@ -272,9 +272,6 @@ function handleSlotClick(slot) {
         const modalImage = document.getElementById("modalImage");
         modalImage.src = imgElement.src;
         modal.style.display = "block";
-
-    } else {
-        showNotification("Không có hình ảnh để phóng to!");
 
     }
 }
